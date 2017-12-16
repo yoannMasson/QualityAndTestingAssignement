@@ -1,0 +1,5 @@
+The file contains the settings for the simulation of the scheduler programm. To add a variable to the programm just put
+the name of the variable then a semi-colon and then the value and a semi-colon WITHOUT SPACES.
+Variable MUST BE of a numerical type.
+
+STUDENT_NUMBER;40;

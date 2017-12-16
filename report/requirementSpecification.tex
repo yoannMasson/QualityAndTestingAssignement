@@ -1,0 +1,318 @@
+%Copyright 2014 Jean-Philippe Eisenbarth
+%This program is free software: you can 
+%redistribute it and/or modify it under the terms of the GNU General Public 
+%License as published by the Free Software Foundation, either version 3 of the 
+%License, or (at your option) any later version.
+%This program is distributed in the hope that it will be useful,but WITHOUT ANY 
+%WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+%PARTICULAR PURPOSE. See the GNU General Public License for more details.
+%You should have received a copy of the GNU General Public License along with 
+%this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%Based on the code of Yiannis Lazarides
+%http://tex.stackexchange.com/questions/42602/software-requirements-specification-with-latex
+%http://tex.stackexchange.com/users/963/yiannis-lazarides
+%Also based on the template of Karl E. Wiegers
+%http://www.se.rit.edu/~emad/teaching/slides/srs_template_sep14.pdf
+%http://karlwiegers.com
+\documentclass{scrreprt}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{underscore}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\hypersetup{
+    bookmarks=false,    % show bookmarks bar?
+    pdftitle={Software Requirement Specification},    % title
+    pdfauthor={Yoann Masson},                     % author
+    pdfsubject={Scheduler Simulation for IT departement},% subject of the document
+    pdfkeywords={}, % list of keywords
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,       % color of internal links
+    citecolor=black,       % color of links to bibliography
+    filecolor=black,        % color of file links
+    urlcolor=purple,        % color of external links
+    linktoc=page            % only page is linked
+}%
+\def\myversion{1.0 }
+\date{}
+%\title{%
+
+%}
+\usepackage{hyperref}
+\begin{document}
+
+\begin{flushright}
+    \rule{16cm}{5pt}\vskip1cm
+    \begin{bfseries}
+        \Huge{SOFTWARE REQUIREMENTS\\ SPECIFICATION}\\
+        \vspace{1.9cm}
+        for\\
+        \vspace{1.9cm}
+        Scheduler simulation for the Cranfield IT Departement\\
+        \vspace{1.9cm}
+        \LARGE{Version \myversion approved}\\
+        \vspace{1.9cm}
+        Prepared by Yoann Masson\\
+        \today\\
+    \end{bfseries}
+\end{flushright}
+
+\tableofcontents
+
+\chapter{Introduction}
+
+Nowadays high powerfull computer is highly interesting for industries and research. To stay on top of the game, Cranfield University is purchasing a new super computer. It will be used by a large number of users ( students, researchers, etc...), so a good ressources management and a good billing policy is mandatory. In order to achieve these goals, a simulation of the new job control system is requiered. 
+
+This document will stated the requirement specifications of the simulation of the new job control system. The software shall allow IT supports to run different simulations of the job scheduler for the new supercomputer and shall keep track of the accounting state at any point in time. The simulation shall model the behaviour of the computing platform to explore alternative accounting strategies.
+The requirements should be well explained and not subject to any interpretation.
+
+
+
+\chapter{Overall Description}
+
+\section{Product Perspective}
+$<$Describe the context and origin of the product being specified in this SRS.  
+For example, state whether this product is a follow-on member of a product 
+family, a replacement for certain existing systems, or a new, self-contained 
+product. If the SRS defines a component of a larger system, relate the 
+requirements of the larger system to the functionality of this software and 
+identify interfaces between the two. A simple diagram that shows the major 
+components of the overall system, subsystem interconnections, and external 
+interfaces can be helpful.$>$
+
+\section{Product Functions}
+$<$Summarize the major functions the product must perform or must let the user 
+perform. Details will be provided in Section 3, so only a high level summary 
+(such as a bullet list) is needed here. Organize the functions to make them 
+understandable to any reader of the SRS. A picture of the major groups of 
+related requirements and how they relate, such as a top level data flow diagram 
+or object class diagram, is often effective.$>$
+
+\section{User Classes and Characteristics}
+$<$Identify the various user classes that you anticipate will use this product.  
+User classes may be differentiated based on frequency of use, subset of product 
+functions used, technical expertise, security or privilege levels, educational 
+level, or experience. Describe the pertinent characteristics of each user class.  
+Certain requirements may pertain only to certain user classes. Distinguish the 
+most important user classes for this product from those who are less important 
+to satisfy.$>$
+
+\section{Operating Environment}
+$<$Describe the environment in which the software will operate, including the 
+hardware platform, operating system and versions, and any other software 
+components or applications with which it must peacefully coexist.$>$
+
+\section{Design and Implementation Constraints}
+$<$Describe any items or issues that will limit the options available to the 
+developers. These might include: corporate or regulatory policies; hardware 
+limitations (timing requirements, memory requirements); interfaces to other 
+applications; specific technologies, tools, and databases to be used; parallel 
+operations; language requirements; communications protocols; security 
+considerations; design conventions or programming standards (for example, if the 
+customer’s organization will be responsible for maintaining the delivered 
+software).$>$
+
+\section{User Documentation}
+$<$List the user documentation components (such as user manuals, on-line help, 
+and tutorials) that will be delivered along with the software. Identify any 
+known user documentation delivery formats or standards.$>$
+\section{Assumptions and Dependencies}
+
+$<$List any assumed factors (as opposed to known facts) that could affect the 
+requirements stated in the SRS. These could include third-party or commercial 
+components that you plan to use, issues around the development or operating 
+environment, or constraints. The project could be affected if these assumptions 
+are incorrect, are not shared, or change. Also identify any dependencies the 
+project has on external factors, such as software components that you intend to 
+reuse from another project, unless they are already documented elsewhere (for 
+example, in the vision and scope document or the project plan).$>$
+
+
+\chapter{External Interface Requirements}
+
+\section{User Interfaces}
+The simulation will run on parameters set by users. All settings will be stored and can be changed in a provided file. When executing the simulation this file must be given as a parameter of the executable for the settings to be taken in account. Parameters will go from the number user to the accounting settings and the number/frequency of jobs.\\
+If no file is provided, default settings will be applied. Those default settings can be found as an appendix of this document.\\
+The output of the simulation shall be printed on the console executing the simulation.
+
+
+\chapter{System Features}
+
+\section{User Management}
+
+
+\subsection{Description}
+Simulated users are the heart of the system since they are the one making job requests. They are dividing into three groups :
+\begin{itemize}
+\item students
+\item researchers
+\item IT Supports
+\end{itemize}
+Each user is entitled budget, IT Supports get unlimited budget while students have a budget depending on their Msc. Every researcher has financial ressources according to their groups, some of them can have additional ressources.\\
+Student will be separate evenly between these 3 Msc: Computer, Water, Soil.
+
+\subsection{Settings from the input files}
+The settings that can be changed through the settings file are:
+
+\begin{table}[ht]
+\centering
+\caption{User variable}
+\begin {tabular}{ l l l}
+\toprule
+Variable & Default Value & Description \\
+\midrule
+\midrule
+ STUDENT_NUMBER & 60  & the number of student considered in the simulation \\
+ RESEARCHER_NUMBER & 20 & the number of researcher considered in the simulation \\
+ COMPUTER_BUDGET & 20.00  & Budget attribut to one student from Computer Msc \\
+ WATER_BUDGET & 10.00  & Budget attribut to one student from Water Msc \\
+ SOIL_BUDGET & 5.00  & Budget attribut to one student from Soil Msc \\
+\bottomrule
+\end {tabular}
+\end{table}
+
+
+\subsection{Functional Requirements}
+Every variable must be greater or equal than 0
+
+
+\section{Ressource Management}
+
+
+\subsection{Description}
+With this feature, the user can manage the power of the simulated computing system. The changes that can be made are about the numbers of nodes, the price of using these nodes and the cost for the IT departement for running the super computer. 
+\subsection{Settings from the input files}
+The settings that can be changed through the settings file are:
+
+\begin{table}[ht]
+\centering
+\caption{Computing variable}
+\begin {tabular}{ l l l}
+\toprule
+Variable & Default Value & Description \\
+\midrule
+\midrule
+NODES_16_PROCESSOR_NUMBER & 80  & the number of traditional nodes\\&& with 16 processors considered \\
+NODES_32_PROCESSOR_NUMBER & 40  & the number of traditional nodes\\&& with 32 processors considered  \\
+NODES_64_PROCESSOR_NUMBER & 30  & the number of traditional nodes\\&& with 64 processors considered \\
+ACCELERATED_16_PROCESSOR_NUMBER & 30  & the number of accelerated\\&& nodes with 16 processors considered  \\
+ACCELERATED_32_PROCESSOR_NUMBER & 20  & the number of accelerated\\&& nodes with 32 processors considered  \\
+ACCELERATED_64_PROCESSOR_NUMBER & 10  & the number of accelerated\\&& nodes with 64 processors considered \\
+SPECIALIZED_NUMBER & 20  & the number of specialized\\&& nodes considered \\
+SMALL_PRICE & 0.05  & the price of one machine hour\\&& for computing small jobs. \\
+MEDIUM_PRICE & 0.05  & the price of one machine hour\\&& for computing medium jobs. \\
+LARGE_PRICE & 0.05 & the price of one machine hour\\&& for computing large jobs. \\
+HUGE_PRICE & 0.05  & the price of one machine hour\\&& for computing huge jobs. \\
+COMPUTER_COST & 0.01  & the cost for the IT Department\\&& per node\&hour. \\
+
+\bottomrule
+\end {tabular}
+\end{table}
+
+
+\subsection{Functional Requirements}
+Every variable must be greater or equal than 0. There must be at least 128 nodes in total.
+
+\section{Job genreation Management}
+
+
+\subsection{Description}
+Jobs are to be generated randomly, the more users you have the more jobs are generated. Jobs are generated with an exponential distribution with parameters dependings on the user settings. 
+\subsection{Settings from the input files}
+The settings that can be changed through the settings file are:
+
+\begin{table}[ht]
+\centering
+\caption{Computing variable}
+\begin {tabular}{ l l l}
+\toprule
+Variable & Default Value & Description \\
+\midrule
+\midrule
+NODES_16_PROCESSOR_NUMBER & 80  & the number of traditional nodes\\&& with 16 processors considered \\
+NODES_32_PROCESSOR_NUMBER & 40  & the number of traditional nodes\\&& with 32 processors considered  \\
+NODES_64_PROCESSOR_NUMBER & 30  & the number of traditional nodes\\&& with 64 processors considered \\
+ACCELERATED_16_PROCESSOR_NUMBER & 30  & the number of accelerated\\&& nodes with 16 processors considered  \\
+ACCELERATED_32_PROCESSOR_NUMBER & 20  & the number of accelerated\\&& nodes with 32 processors considered  \\
+ACCELERATED_64_PROCESSOR_NUMBER & 10  & the number of accelerated\\&& nodes with 64 processors considered \\
+SPECIALIZED_NUMBER & 20  & the number of specialized\\&& nodes considered \\
+SMALL_PRICE & 0.05  & the price of one machine hour\\&& for computing small jobs. \\
+MEDIUM_PRICE & 0.05  & the price of one machine hour\\&& for computing medium jobs. \\
+LARGE_PRICE & 0.05 & the price of one machine hour\\&& for computing large jobs. \\
+HUGE_PRICE & 0.05  & the price of one machine hour\\&& for computing huge jobs. \\
+COMPUTER_COST & 0.01  & the cost for the IT Department\\&& per node\&hour. \\
+
+\bottomrule
+\end {tabular}
+\end{table}
+
+
+\subsection{Functional Requirements}
+Every variable must be greater or equal than 0. There must be at least 128 nodes in total.
+
+\chapter{Other Nonfunctional Requirements}
+
+\section{Performance Requirements}
+$<$If there are performance requirements for the product under various 
+circumstances, state them here and explain their rationale, to help the 
+developers understand the intent and make suitable design choices. Specify the 
+timing relationships for real time systems. Make such requirements as specific 
+as possible. You may need to state performance requirements for individual 
+functional requirements or features.$>$
+
+\section{Safety Requirements}
+$<$Specify those requirements that are concerned with possible loss, damage, or 
+harm that could result from the use of the product. Define any safeguards or 
+actions that must be taken, as well as actions that must be prevented. Refer to 
+any external policies or regulations that state safety issues that affect the 
+product’s design or use. Define any safety certifications that must be 
+satisfied.$>$
+
+\section{Security Requirements}
+$<$Specify any requirements regarding security or privacy issues surrounding use 
+of the product or protection of the data used or created by the product. Define 
+any user identity authentication requirements. Refer to any external policies or 
+regulations containing security issues that affect the product. Define any 
+security or privacy certifications that must be satisfied.$>$
+
+\section{Software Quality Attributes}
+$<$Specify any additional quality characteristics for the product that will be 
+important to either the customers or the developers. Some to consider are: 
+adaptability, availability, correctness, flexibility, interoperability, 
+maintainability, portability, reliability, reusability, robustness, testability, 
+and usability. Write these to be specific, quantitative, and verifiable when 
+possible. At the least, clarify the relative preferences for various attributes, 
+such as ease of use over ease of learning.$>$
+
+\section{Business Rules}
+$<$List any operating principles about the product, such as which individuals or 
+roles can perform which functions under specific circumstances. These are not 
+functional requirements in themselves, but they may imply certain functional 
+requirements to enforce the rules.$>$
+
+
+\chapter{Other Requirements}
+$<$Define any other requirements not covered elsewhere in the SRS. This might 
+include database requirements, internationalization requirements, legal 
+requirements, reuse objectives for the project, and so on. Add any new sections 
+that are pertinent to the project.$>$
+
+\section{Appendix A: Glossary}
+%see https://en.wikibooks.org/wiki/LaTeX/Glossary
+$<$Define all the terms necessary to properly interpret the SRS, including 
+acronyms and abbreviations. You may wish to build a separate glossary that spans 
+multiple projects or the entire organization, and just include terms specific to 
+a single project in each SRS.$>$
+
+\section{Appendix B: Analysis Models}
+$<$Optionally, include any pertinent analysis models, such as data flow 
+diagrams, class diagrams, state-transition diagrams, or entity-relationship 
+diagrams.$>$
+
+\section{Appendix C: To Be Determined List}
+$<$Collect a numbered list of the TBD (to be determined) references that remain 
+in the SRS so they can be tracked to closure.$>$
+
+\end{document}
