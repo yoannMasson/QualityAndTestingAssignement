@@ -1,15 +1,16 @@
+package simulation;
 import java.io.*;
 import java.util.*;
 
 import javax.print.attribute.HashAttributeSet;
 
 
-public class Settings {
+public class SimulationSettings {
 
 	private String filePath;
 	private Map<String,Float> settings;
 
-	public Settings(String path) throws Exception{
+	public SimulationSettings(String path) throws Exception{
 
 		this.filePath = path;
 		this.settings = new HashMap<>();
@@ -26,8 +27,8 @@ public class Settings {
 		//Read File Line By Line
 		while ((strLine = br.readLine()) != null)   {
 
-			array = strLine.split(";");
-			if(array.length == 3 ||array.length == 2) {//The line is correct
+			array = strLine.split("=");
+			if(array.length == 2) {//The line is correct
 				settings.put(array[0],Float.parseFloat(array[1]));
 			}
 		}
@@ -49,7 +50,7 @@ public class Settings {
 	/**
 	 * Use default settings
 	 */
-	public Settings() {
+	public SimulationSettings() {
 		this.filePath = "";
 		this.defaultSettings();
 	}
@@ -68,6 +69,14 @@ public class Settings {
 	public Map<String,Float> getSettings() {
 		return settings;
 	}	
+	
+	/**
+	 * @param param, the key we want the value from
+	 * @return the wanted value in the settings, null if it does not exist.
+	 */
+	public Float get(String param) {
+		return settings.get(param);
+	}
 
 	/**
 	 * Generate the default settings
@@ -92,6 +101,10 @@ public class Settings {
 		this.settings.put("LARGE_PRICE", 0.05f);
 		this.settings.put("HUGE_PRICE", 0.05f);
 		this.settings.put("COMPUTER_COST", 0.01f);
+		this.settings.put("ENTIRE_TIME", 8f);
+		this.settings.put("DELTA_SIZE", 1f);
+		this.settings.put("DELTA_JOB_TIME", 1f);
+		this.settings.put("DELTA_REQUEST_TIME", 1f);
 
 		/**STUDENT_NUMBER;40;
 RESEARCHER NUMBER;20;
@@ -109,7 +122,11 @@ SMALL_PRICE;0.05;
 MEDIUM_PRICE;0.05;
 LARGE_PRICE;0.05;
 HUGE_PRICE;0.05;
-COMPUTER_COST;0.01;*/
+COMPUTER_COST;0.01;
+ENTIRE_TIME=8
+DELTA_SIZE=1
+DELTA_JOB_TIME=1
+DELTA_REQUEST_TIME=1*/
 
 		return this.getSettings();
 	}
