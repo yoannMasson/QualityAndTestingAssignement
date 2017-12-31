@@ -34,17 +34,12 @@ public class SimulationSettings {
 		}
 		br.close();
 		//Checking that we have at least 128 cores
-		if(settings.get("NODES_16_PROCESSOR_NUMBER")+
-				settings.get("NODES_32_PROCESSOR_NUMBER")+
-				settings.get("NODES_64_PROCESSOR_NUMBER")+
-				settings.get("ACCELERATED_16_PROCESSOR_NUMBER")+
-				settings.get("ACCELERATED_32_PROCESSOR_NUMBER")+
-				settings.get("ACCELERATED_64_PROCESSOR_NUMBER")+
-				settings.get("NODES_16_PROCESSOR_NUMBER")+
+		if(settings.get("NODES_PROCESSOR_NUMBER")+
+				settings.get("ACCELERATED_PROCESSOR_NUMBER")+
 				settings.get("SPECIALIZED_NUMBER") < 128) {
 			throw new Exception("There must be at least 128 cores in total");
 		}
-		
+
 	}
 
 	/**
@@ -69,13 +64,18 @@ public class SimulationSettings {
 	public Map<String,Float> getSettings() {
 		return settings;
 	}	
-	
+
 	/**
+	 * Return the value of the asked settings
 	 * @param param, the key we want the value from
-	 * @return the wanted value in the settings, null if it does not exist.
+	 * @return the wanted value in the settings, -1 if it does not exist.
 	 */
 	public Float get(String param) {
-		return settings.get(param);
+		float result = -1;
+		if(settings.containsKey(param)) {
+			result = settings.get(param);
+		}
+		return result;
 	}
 
 	/**
@@ -89,12 +89,8 @@ public class SimulationSettings {
 		this.settings.put("COMPUTER_BUDGET", 20f);
 		this.settings.put("WATER_BUDGET", 10f);
 		this.settings.put("SOIL_BUDGET", 5f);
-		this.settings.put("NODES_16_PROCESSOR_NUMBER", 80f);
-		this.settings.put("NODES_32_PROCESSOR_NUMBER", 40f);
-		this.settings.put("NODES_64_PROCESSOR_NUMBER", 30f);
-		this.settings.put("ACCELERATED_16_PROCESSOR_NUMBER", 30f);
-		this.settings.put("ACCELERATED_32_PROCESSOR_NUMBER", 20f);
-		this.settings.put("ACCELERATED_64_PROCESSOR_NUMBER", 10f);
+		this.settings.put("NODES_PROCESSOR_NUMBER", 80f);
+		this.settings.put("ACCELERATED_PROCESSOR_NUMBER", 40f);
 		this.settings.put("SPECIALIZED_NUMBER", 20f);
 		this.settings.put("SMALL_PRICE", 0.05f);
 		this.settings.put("MEDIUM_PRICE", 0.05f);
@@ -105,30 +101,25 @@ public class SimulationSettings {
 		this.settings.put("DELTA_SIZE", 1f);
 		this.settings.put("DELTA_JOB_TIME", 1f);
 		this.settings.put("DELTA_REQUEST_TIME", 1f);
+		this.settings.put("RESEARCHER_BUDGET", 50f);
 
-		/**STUDENT_NUMBER;40;
-RESEARCHER NUMBER;20;
-COMPUTER_BUDGET;20;
-WATER_BUDGET;10;
-SOIL_BUDGET;5;
-NODES_16_PROCESSOR_NUMBER;80;
-NODES_32_PROCESSOR_NUMBER;40;
-NODES_64_PROCESSOR_NUMBER;30;
-ACCELERATED_16_PROCESSOR_NUMBER;30;
-ACCELERATED_32_PROCESSOR_NUMBER;20;
-ACCELERATED_64_PROCESSOR_NUMBER;10;
-SPECIALIZED_NUMBER;20;
-SMALL_PRICE;0.05;
-MEDIUM_PRICE;0.05;
-LARGE_PRICE;0.05;
-HUGE_PRICE;0.05;
-COMPUTER_COST;0.01;
-ENTIRE_TIME=8
-DELTA_SIZE=1
-DELTA_JOB_TIME=1
-DELTA_REQUEST_TIME=1*/
 
 		return this.getSettings();
+	}
+
+	public int getTotalNumberNodes() {
+		return (int) (settings.get("NODES_PROCESSOR_NUMBER")+
+				settings.get("ACCELERATED_PROCESSOR_NUMBER")+
+				settings.get("SPECIALIZED_NUMBER"));
+	}
+
+	/**
+	 * Return the duration of the simulation
+	 * @return the simulation time
+	 */
+	public int getSimulationTime() {
+
+		return this.settings.get("ENTIRE_TIME").intValue();
 	}
 
 }
