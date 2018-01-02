@@ -81,7 +81,7 @@ public class Main {
 
 		//Jobs simulation
 		while(currentDate.before(endingDate)) {//generate jobs
-			currentDate = new Date(currentDate.getTime()+rd.getTimeBetweenJobs()*1000);//Moving forward in time
+			currentDate = new Date(currentDate.getTime()+rd.getTimeBetweenJobs()*1000L);//Moving forward in time
 			nbRequestedCore = rd.getJobSize();
 			duration = rd.getJobTime();
 			
@@ -89,11 +89,11 @@ public class Main {
 				newJob = new Job(nbRequestedCore, currentDate, duration,smallQ );
 				if(! smallQ.addJob(newJob)) System.out.println("false small");
 				
-			}else if (nbRequestedCore <= settings.getTotalNumberNodes()*0.1 && duration <= 3600*8) {//Medium jobs
+			}else if (nbRequestedCore <= settings.getTotalNumberNodes()*0.1 && duration <= 3600*8L) {//Medium jobs
 				newJob = new Job(nbRequestedCore, currentDate, duration, mediumQ);
 				if(! mediumQ.addJob(newJob)) System.out.println("false mediumQ");
 				
-			}else if(nbRequestedCore <= settings.getTotalNumberNodes()*0.5 && duration <= 3600*16) {//Large jobs
+			}else if(nbRequestedCore <= settings.getTotalNumberNodes()*0.5 && duration <= 3600*16L) {//Large jobs
 				newJob = new Job(nbRequestedCore, currentDate, duration, largeQ);
 				if(! largeQ.addJob(newJob)) System.out.println("false largeQ");
 				
@@ -101,13 +101,14 @@ public class Main {
 				newJob = new Job(nbRequestedCore, currentDate, duration, hugeQ);
 				if(! hugeQ.addJob(newJob)) System.out.println("false hugeQ"+newJob.getDuration());
 				
-			}
+			}			
 		}
 		System.out.println("there are "+smallQ.getNbJobInTheQueue()+" small jobs");
 		System.out.println("there are "+mediumQ.getNbJobInTheQueue()+" medium jobs");
 		System.out.println("there are "+largeQ.getNbJobInTheQueue()+" large jobs");
 		System.out.println("there are "+hugeQ.getNbJobInTheQueue()+" huge jobs");
 		mediumQ.processJobs();
+		
 
 	}
 

@@ -1,5 +1,5 @@
 package simulation;
 
 public enum JobStatus {
-	waiting,inQueue,processing,done;
+	inQueue,processing,done;
 }

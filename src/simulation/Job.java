@@ -14,14 +14,21 @@ public class Job {
 	private User user;
 	private float cost;
 
+	/**
+	 * Create a new job
+	 * @param nbCores number of cores requested
+	 * @param requestDate the date the job is created ( put in the queue)
+	 * @param duration the duration of the job, in second
+	 * @param queue, the queue the job is affiliated
+	 */
 	public Job(int nbCores,Date requestDate, long duration, Queue queue) {
 
 		this.nbCores = nbCores;
-		this.status = JobStatus.waiting;
+		this.status = JobStatus.inQueue;
 		this.requestDate = requestDate;
 		this.duration = duration;
-		
-		float cost = this.duration%60+1;// We assume that one minute is counted as one hour.
+
+		float cost = this.duration/3600+1;// We assume that one minute is counted as one hour.
 		cost *= queue.getCost();
 		this.cost = cost;
 	}
@@ -43,18 +50,17 @@ public class Job {
 	 * @throws notEnoughBudgetException, when the user has not enough budget
 	 */
 	public void startJob(Date date) throws notEnoughBudgetException {
-
+		this.startDate = date;
+		this.status = JobStatus.processing;
+		
 		if(this.user != null ) {
 			if(user.getBudget() < cost) {
 				throw new notEnoughBudgetException("The user can not pay $"+this.getCost());
 			}else {
-				this.startDate = date;
 				user.pay(cost);
 			}
-		}else {
-			this.startDate = date;
 		}
-		this.status = JobStatus.processing;
+		
 	}
 
 	/**
@@ -62,7 +68,7 @@ public class Job {
 	 * @return the job cost
 	 */
 	public float getCost() {
-		
+
 		return this.cost;
 	}
 
@@ -71,17 +77,17 @@ public class Job {
 	 * @return the finishing date
 	 */
 	public Date getFinishedDate() {
-
+		
 		long date =  (this.startDate.getTime()+this.duration*1000);
 		return new Date(date);
 	}
 
 	/**
-	 * return the time that the programm waited between the request and the starting date
+	 * return the time that the programm waited between the request and the starting date in seconds
 	 */
 	public long getWaitingTime() {
 
-		return (Math.abs(this.startDate.getTime() - this.requestDate.getTime())*1000);
+		return (Math.abs(this.startDate.getTime() - this.requestDate.getTime())/1000);
 	}
 
 	/**
@@ -110,10 +116,6 @@ public class Job {
 		return this.status;
 	}
 
-	public String toString() {
-		return "the job is: "+this.getJobStatus()+"\nIt was created on "+this.requestDate+"\n and is asking for "+this.getNodes()+" nodes";
-	}
-
 	public void setUser(User user) {
 
 		this.user = user;
@@ -125,8 +127,30 @@ public class Job {
 	 * @return the creation date
 	 */
 	public Date getDate() {
-		
+
 		return this.requestDate;
 	}
 
+	@Override
+	public String toString() {
+		switch(status) {
+		case done:
+			return "Job finished at: "+getFinishedDate()+"\nit took "+duration+" secondes and started at: "+startDate+"\nThe requested date is "+requestDate+"\nIt has waited "+getWaitingTime()+"secondes\nThe cost is £"+cost;
+		case inQueue:
+			return "Job has not started yet , request date is "+requestDate+"\n the cost is £"+cost;	
+		case processing:
+			return "Job is currently processing ,request date is "+requestDate +"\n the cost is £"+cost;
+		default:
+			return "Job has no status"+"\n the cost is £"+cost;
+		}
+	}
+
+	/**
+	 * Return the date of the creation of the job
+	 * @return the date of creation of the job
+	 */
+	public Date getRequestDate() {
+
+		return requestDate;
+	}
 }
