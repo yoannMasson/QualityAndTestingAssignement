@@ -28,7 +28,7 @@ public class RandomGenerator {
 		if(lambdaJobTime == -1) {
 			lambdaJobTime = 1f;
 		}
-		return (int) (3600*expNumber(lambdaJobTime));
+		return (int) (3600*expNumber(lambdaJobTime))+1;
 	}
 	
 	/**

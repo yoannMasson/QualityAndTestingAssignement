@@ -28,7 +28,13 @@ public class Job {
 		this.requestDate = requestDate;
 		this.duration = duration;
 
-		float cost = this.duration/3600+1;// We assume that one minute is counted as one hour.
+		float cost = (this.duration/3600)+1;// We assume that one minute is counted as one hour.
+		if (((this.nbCores/32f) == (int)(this.nbCores/32))) {
+		
+			cost *= (int)(this.nbCores/32);
+		}else {
+			cost *= (int)(this.nbCores/32)+1;
+		}
 		cost *= queue.getCost();
 		this.cost = cost;
 	}
@@ -45,22 +51,24 @@ public class Job {
 	/**
 	 * Start the job, you have to provide the date since it is a simulation.
 	 * if the job is assigned to a user the method will check that the associated user
-	 * has enough budget or will throw an exception otherwise
+	 * has enough budget or will throw an exception otherwise.
+	 * If the job already started, nothing will happen
 	 * @param date, the current date
 	 * @throws notEnoughBudgetException, when the user has not enough budget
 	 */
 	public void startJob(Date date) throws notEnoughBudgetException {
-		this.startDate = date;
-		this.status = JobStatus.processing;
 		
-		if(this.user != null ) {
-			if(user.getBudget() < cost) {
-				throw new notEnoughBudgetException("The user can not pay $"+this.getCost());
-			}else {
-				user.pay(cost);
+		if(this.status == JobStatus.inQueue) {
+			this.startDate = date;
+			this.status = JobStatus.processing;
+			if(this.user != null ) {
+				if(user.getBudget() < cost) {
+					throw new notEnoughBudgetException("The user can not pay $"+this.getCost());
+				}else {
+					user.pay(cost);
+				}
 			}
 		}
-		
 	}
 
 	/**
@@ -77,7 +85,7 @@ public class Job {
 	 * @return the finishing date
 	 */
 	public Date getFinishedDate() {
-		
+
 		long date =  (this.startDate.getTime()+this.duration*1000);
 		return new Date(date);
 	}
@@ -135,9 +143,15 @@ public class Job {
 	public String toString() {
 		switch(status) {
 		case done:
-			return "Job finished at: "+getFinishedDate()+"\nit took "+duration+" secondes and started at: "+startDate+"\nThe requested date is "+requestDate+"\nIt has waited "+getWaitingTime()+"secondes\nThe cost is £"+cost;
+			return "Job finished at: "+getFinishedDate()
+			+"\nit took "+duration+" secondes and started at: "+startDate
+			+"\nThe requested date is "+requestDate
+			+"\nIt has waited "+getWaitingTime()+"secondes"
+			+"\nThe cost is £"+cost;
 		case inQueue:
-			return "Job has not started yet , request date is "+requestDate+"\n the cost is £"+cost;	
+			return "Job has not started yet , request date is "+requestDate+"\n the cost is £"+cost
+					+"\nit should take "+duration+" secondes "
+					+"and is asking for "+getNodes()+" cores";
 		case processing:
 			return "Job is currently processing ,request date is "+requestDate +"\n the cost is £"+cost;
 		default:

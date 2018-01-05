@@ -11,12 +11,14 @@ public class Main {
 		//Getting settings from the file
 		SimulationSettings settings ;
 		try {
-			settings = new SimulationSettings("./util/settings");
+			settings = new SimulationSettings(args[0]);
 		} catch (Exception e1) {
 			System.out.println("The system did not find the settings file.\n Using default settings");
 			settings = new SimulationSettings();
 		}
 		List<User> userList = new ArrayList<>();
+		
+		User currentUser;
 		
 		int nbTradtionalCores,nbAcceleratedCores,nbSpecializedCores;
 		int nbTradtionalCoresS,nbAcceleratedCoresS,nbSpecializedCoresS;
@@ -60,6 +62,12 @@ public class Main {
 		LargeQueue largeQ = new LargeQueue(nbTradtionalCoresL,nbAcceleratedCoresL,nbSpecializedCoresL,settings);
 		HugeQueue hugeQ = new HugeQueue(nbTradtionalCores,nbAcceleratedCores,nbSpecializedCores,settings);
 
+		Result res = new Result(settings);
+		res.addQueue(hugeQ);
+		res.addQueue(largeQ);
+		res.addQueue(mediumQ);
+		res.addQueue(smallQ);
+		
 		//User initialization
 		nbResearcher = settings.get("RESEARCHER_NUMBER").intValue();
 		nbComputerUser = (int) (settings.get("STUDENT_NUMBER")/3);
@@ -79,11 +87,13 @@ public class Main {
 			userList.add(new User(UserType.researcher,settings.get("RESEARCHER_BUDGET")));
 		}
 
+		
 		//Jobs simulation
 		while(currentDate.before(endingDate)) {//generate jobs
 			currentDate = new Date(currentDate.getTime()+rd.getTimeBetweenJobs()*1000L);//Moving forward in time
 			nbRequestedCore = rd.getJobSize();
 			duration = rd.getJobTime();
+			
 			
 			if(nbRequestedCore <= 2 && duration <= 3600 ) {//small jobs
 				newJob = new Job(nbRequestedCore, currentDate, duration,smallQ );
@@ -99,16 +109,29 @@ public class Main {
 				
 			}else {//huge jobs
 				newJob = new Job(nbRequestedCore, currentDate, duration, hugeQ);
-				if(! hugeQ.addJob(newJob)) System.out.println("false hugeQ"+newJob.getDuration());
+				if(! hugeQ.addJob(newJob)) System.out.println("false hugeQ duration:"+newJob.getDuration()+" core "+newJob.getNodes());
 				
-			}			
+			}
+			currentUser =  userList.get((int) (Math.random()*userList.size()));
+			newJob.setUser(currentUser);
+			
 		}
 		System.out.println("there are "+smallQ.getNbJobInTheQueue()+" small jobs");
 		System.out.println("there are "+mediumQ.getNbJobInTheQueue()+" medium jobs");
 		System.out.println("there are "+largeQ.getNbJobInTheQueue()+" large jobs");
 		System.out.println("there are "+hugeQ.getNbJobInTheQueue()+" huge jobs");
-		mediumQ.processJobs();
 		
+		smallQ.processJobs();
+		mediumQ.processJobs();
+		largeQ.processJobs();
+		hugeQ.processJobs();
+	
+		System.out.println(smallQ.jobsQueue.get(smallQ.jobsQueue.size()-1));
+		System.out.println(mediumQ.jobsQueue.get(mediumQ.jobsQueue.size()-1));
+		System.out.println(largeQ.jobsQueue.get(largeQ.jobsQueue.size()-1));
+	
+		
+		System.out.println(res);
 
 	}
 
