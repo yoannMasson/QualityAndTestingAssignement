@@ -125,11 +125,6 @@ public class Main {
 		mediumQ.processJobs();
 		largeQ.processJobs();
 		hugeQ.processJobs();
-	
-		System.out.println(smallQ.jobsQueue.get(smallQ.jobsQueue.size()-1));
-		System.out.println(mediumQ.jobsQueue.get(mediumQ.jobsQueue.size()-1));
-		System.out.println(largeQ.jobsQueue.get(largeQ.jobsQueue.size()-1));
-	
 		
 		System.out.println(res);
 
