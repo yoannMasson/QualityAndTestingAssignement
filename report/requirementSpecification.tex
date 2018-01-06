@@ -72,69 +72,34 @@ The requirements should be well explained and not subject to any interpretation.
 
 \chapter{Overall Description}
 
-\section{Product Perspective}
-$<$Describe the context and origin of the product being specified in this SRS.  
-For example, state whether this product is a follow-on member of a product 
-family, a replacement for certain existing systems, or a new, self-contained 
-product. If the SRS defines a component of a larger system, relate the 
-requirements of the larger system to the functionality of this software and 
-identify interfaces between the two. A simple diagram that shows the major 
-components of the overall system, subsystem interconnections, and external 
-interfaces can be helpful.$>$
-
 \section{Product Functions}
-$<$Summarize the major functions the product must perform or must let the user 
-perform. Details will be provided in Section 3, so only a high level summary 
-(such as a bullet list) is needed here. Organize the functions to make them 
-understandable to any reader of the SRS. A picture of the major groups of 
-related requirements and how they relate, such as a top level data flow diagram 
-or object class diagram, is often effective.$>$
 
-\section{User Classes and Characteristics}
-$<$Identify the various user classes that you anticipate will use this product.  
-User classes may be differentiated based on frequency of use, subset of product 
-functions used, technical expertise, security or privilege levels, educational 
-level, or experience. Describe the pertinent characteristics of each user class.  
-Certain requirements may pertain only to certain user classes. Distinguish the 
-most important user classes for this product from those who are less important 
-to satisfy.$>$
+The simulation will randomly create jobs based on an exponential distribution law, meaning that the resources needed and the time needed to run the job will depends on parameters given by the real user of the simulation. The cost of running a job is up to these two parameters.\\
+As in real life, the job system control simulation will have various type of user with each having a different budget, users that can't pay for a job running will not be able to see their job running as it would be on real life.\\
+All the ressources shall be split between three queue:\begin{itemize}
+\item small queue, 20\% of all cores working on small jobs ( less than 2 nodes and 1 hour )
+\item medium queue, 30\% of all cores working for medium jobs ( less than 10\% of all cores and less than 8h)
+\item large queue, 50\% of all cores working on large jobs (less than 50\% of all cores and less than 16h)
+\end{itemize}
+Every other jobs will run on the week-end (from friday 17:00 to monday 9:00 ), where all the queue are not working to let the huge queue works with huge jobs that can take up to 48h and all resources.\\
+The queuing system shall work on the first come/first serve strategy, the firsts job to request resources will be given the resources until there is not enough resources for the next job that will needs to wait for one to finish.
+
+\section{Interaction between classes}
+Classes work together, here is a data flow model to briefly see the interactions between them.\\INSERT DATA FLOW
 
 \section{Operating Environment}
-$<$Describe the environment in which the software will operate, including the 
-hardware platform, operating system and versions, and any other software 
-components or applications with which it must peacefully coexist.$>$
+The simulation shall run under Java 1.7 in a terminal or in Eclipse by importing the project. For the simulation to take in account the settings file you must provide it as an argument when lauching the programm.
 
-\section{Design and Implementation Constraints}
-$<$Describe any items or issues that will limit the options available to the 
-developers. These might include: corporate or regulatory policies; hardware 
-limitations (timing requirements, memory requirements); interfaces to other 
-applications; specific technologies, tools, and databases to be used; parallel 
-operations; language requirements; communications protocols; security 
-considerations; design conventions or programming standards (for example, if the 
-customer’s organization will be responsible for maintaining the delivered 
-software).$>$
 
 \section{User Documentation}
-$<$List the user documentation components (such as user manuals, on-line help, 
-and tutorials) that will be delivered along with the software. Identify any 
-known user documentation delivery formats or standards.$>$
-\section{Assumptions and Dependencies}
-
-$<$List any assumed factors (as opposed to known facts) that could affect the 
-requirements stated in the SRS. These could include third-party or commercial 
-components that you plan to use, issues around the development or operating 
-environment, or constraints. The project could be affected if these assumptions 
-are incorrect, are not shared, or change. Also identify any dependencies the 
-project has on external factors, such as software components that you intend to 
-reuse from another project, unless they are already documented elsewhere (for 
-example, in the vision and scope document or the project plan).$>$
+The software shall be delivered with the document of the class composing the project. This documentation shall be generate with javadoc, providing comments about methods, argument, return statement and exceptions
 
 
 \chapter{External Interface Requirements}
 
 \section{User Interfaces}
 The simulation will run on parameters set by users. All settings will be stored and can be changed in a provided file. When executing the simulation this file must be given as a parameter of the executable for the settings to be taken in account. Parameters will go from the number user to the accounting settings and the number/frequency of jobs.\\
-If no file is provided, default settings will be applied. Those default settings can be found as an appendix of this document.\\
+If no file is provided, default settings will be applied. Those default settings can be found later in this document.\\
 The output of the simulation shall be printed on the console executing the simulation.
 
 
@@ -144,13 +109,12 @@ The output of the simulation shall be printed on the console executing the simul
 
 
 \subsection{Description}
-Simulated users are the heart of the system since they are the one making job requests. They are dividing into three groups :
+Simulated users are the heart of the system since they are the one making job requests. They are dividing into two groups :
 \begin{itemize}
 \item students
 \item researchers
-\item IT Supports
 \end{itemize}
-Each user is entitled budget, IT Supports get unlimited budget while students have a budget depending on their Msc. Every researcher has financial resources according to their groups, some of them can have additional resources.\\
+Each user is entitled budget, students have a budget depending on their Msc. Every researcher has financial resources according to their groups, some of them can have additional resources.\\
 Student will be separate evenly between these 3 Msc: Computer, Water, Soil.
 
 \subsection{Settings from the input files}
@@ -169,14 +133,20 @@ Variable & Default Value & Description \\
  COMPUTER_BUDGET & 20.00  & Budget attribute to one student from Computer Msc \\
  WATER_BUDGET & 10.00  & Budget attribute to one student from Water Msc \\
  SOIL_BUDGET & 5.00  & Budget attribute to one student from Soil Msc \\
+ RESEARCHER_BUDGET & 50.00  & Budget attribute to one researcher \\
 \bottomrule
 \end {tabular}
 \end{table}
-
-
-\subsection{Functional Requirements}
 Every variable must be greater or equal than 0
 
+\subsection{Functional Requirements}
+Here is the list of functional requirement that the class user must provide:\begin{itemize}
+    \item A user must be able to tell at any moment his budget
+    \item A user must be able to give his status (Msc, researcher) at any moment
+    \item A user must be able to pay for a job
+\end{itemize}
+\subsection{Non-Functional Requirements}
+If a user can not pay for a job, he is not charged for it. He must notice the caller of the pay method with an exception stating that the user does not have enough budget
 
 \section{Resource Management}
 
@@ -194,13 +164,9 @@ The settings that can be changed through the settings file are:
 Variable & Default Value & Description \\
 \midrule
 \midrule
-NODES_16_PROCESSOR_NUMBER & 80  & the number of traditional nodes\\&& with 16 processors considered \\
-NODES_32_PROCESSOR_NUMBER & 40  & the number of traditional nodes\\&& with 32 processors considered  \\
-NODES_64_PROCESSOR_NUMBER & 30  & the number of traditional nodes\\&& with 64 processors considered \\
-ACCELERATED_16_PROCESSOR_NUMBER & 30  & the number of accelerated\\&& nodes with 16 processors considered  \\
-ACCELERATED_32_PROCESSOR_NUMBER & 20  & the number of accelerated\\&& nodes with 32 processors considered  \\
-ACCELERATED_64_PROCESSOR_NUMBER & 10  & the number of accelerated\\&& nodes with 64 processors considered \\
-SPECIALIZED_NUMBER & 20  & the number of specialized\\&& nodes considered \\
+NODES_PROCESSOR_NUMBER & 80  & the number of traditional nodes\\
+ACCELERATED_PROCESSOR_NUMBER & 40  & the number of accelerated nodes\\ 
+SPECIALIZED_NUMBER & 20  & the number of specialized nodes considered \\
 SMALL_PRICE & 0.05  & the price of one machine hour\\&& for computing small jobs. \\
 MEDIUM_PRICE & 0.05  & the price of one machine hour\\&& for computing medium jobs. \\
 LARGE_PRICE & 0.05 & the price of one machine hour\\&& for computing large jobs. \\
@@ -210,10 +176,10 @@ COMPUTER_COST & 0.01  & the cost for the IT Department\\&& per node\&hour. \\
 \bottomrule
 \end {tabular}
 \end{table}
-
+Every variable must be greater or equal than 0. There must be at least 128 nodes in total.
 
 \subsection{Functional Requirements}
-Every variable must be greater or equal than 0. There must be at least 128 nodes in total.
+
 
 \section{Simulation Management}
 

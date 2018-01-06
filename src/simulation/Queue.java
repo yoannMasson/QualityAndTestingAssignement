@@ -254,7 +254,6 @@ public abstract class Queue {
 
 		if(jobsQueue.size() != 0) {
 			Date firstDate = jobsQueue.get(0).getRequestDate();
-			System.out.println(jobsQueue.get(jobsQueue.size()-1));
 			Date lastDate = jobsQueue.get(jobsQueue.size()-1).getFinishedDate();
 			long time = (lastDate.getTime()-firstDate.getTime())/(1000*3600);
 			float cost = settings.get("COMPUTER_COST");
